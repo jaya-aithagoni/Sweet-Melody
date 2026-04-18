@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Sweet Melody</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body { font-family: Arial; margin:0; background:#fff5f7;}
+header { background:#ff4d6d; color:white; text-align:center; padding:15px;}
+.products { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:15px; padding:20px;}
+.card { background:white; padding:10px; border-radius:10px; text-align:center; box-shadow:0 0 10px rgba(0,0,0,0.1);}
+button { background:#ff4d6d; color:white; border:none; padding:8px; margin-top:5px;}
+.cart { position:fixed; right:10px; top:10px; background:white; padding:10px; width:200px;}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>Sweet Melody 🍬</h1>
+</header>
+
+<div class="cart">
+<h3>Cart</h3>
+<ul id="cart"></ul>
+<p>Total ₹<span id="total">0</span></p>
+<button onclick="order()">Order</button>
+</div>
+
+<div class="products" id="products"></div>
+
+<script>
+let cart=[], total=0;
+
+// LOAD PRODUCTS
+function loadProducts(){
+let products = JSON.parse(localStorage.getItem("products")) || [];
+
+let container = document.getElementById("products");
+container.innerHTML="";
+
+products.forEach(p=>{
+container.innerHTML += `
+<div class="card">
+<img src="${p.image}" width="100%">
+<h3>${p.name}</h3>
+<p>₹${p.price}</p>
+<button onclick="add('${p.name}',${p.price})">Add</button>
+</div>`;
+});
+}
+
+function add(name,price){
+cart.push({name,price});
+total+=price;
+update();
+}
+
+function update(){
+let list=document.getElementById("cart");
+list.innerHTML="";
+cart.forEach(i=>{
+list.innerHTML+=`<li>${i.name} ₹${i.price}</li>`;
+});
+document.getElementById("total").innerText=total;
+}
+
+function order(){
+let msg="Order:\n";
+cart.forEach(i=> msg+=i.name+" ₹"+i.price+"\n");
+msg+="Total ₹"+total;
+
+window.open("https://wa.me/919876543210?text="+encodeURIComponent(msg));
+}
+
+loadProducts();
+</script>
+
+</body>
+</html>
